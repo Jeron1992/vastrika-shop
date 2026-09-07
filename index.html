@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vastrika — Kurthi, Half Kurthi & Relaxed Jeans</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --ink:#2B1320;
+    --rosewood:#8C3B4A;
+    --sand:#EFE6DC;
+    --gold:#C9A15A;
+    --blush:#F3D9DD;
+    --cream:#FBF7F2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--sand);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  h1,h2,.serif{ font-family:'Fraunces', serif; }
+
+  /* ---------- Header ---------- */
+  header{
+    position:relative;
+    padding:2.4rem 1.4rem 2.2rem;
+    background:var(--ink);
+    color:var(--cream);
+    clip-path:polygon(0 0, 100% 0, 100% 88%, 0 100%);
+  }
+  header .eyebrow{
+    font-size:0.78rem;
+    color:var(--gold);
+    letter-spacing:0.04em;
+    margin:0 0 0.4rem;
+    position:relative;
+    padding-left:1.1rem;
+  }
+  header .eyebrow::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0.35em;
+    width:0.7rem;
+    height:0.7rem;
+    background:var(--rosewood);
+    clip-path:polygon(0 100%, 100% 100%, 0 0);
+  }
+  header h1{
+    font-size:2.1rem;
+    font-weight:500;
+    margin:0;
+    line-height:1.14;
+    color:var(--cream);
+  }
+  header p{
+    margin:0.7rem 0 0;
+    font-size:0.92rem;
+    color:rgba(251,247,242,0.65);
+    max-width:34ch;
+  }
+
+  /* ---------- Category tabs ---------- */
+  .tabs{
+    display:flex;
+    max-width:520px;
+    margin:0 auto;
+    padding:0 1.4rem;
+    transform:translateY(-1px);
+    gap:0.4rem;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    flex:0 0 auto;
+    background:var(--cream);
+    border:1px solid rgba(43,19,32,0.15);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    font-size:0.82rem;
+    font-weight:500;
+    padding:0.55rem 1rem 0.5rem;
+    cursor:pointer;
+    clip-path:polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+  }
+  .tab.active{
+    background:var(--rosewood);
+    color:var(--cream);
+    border-color:var(--rosewood);
+  }
+
+  /* ---------- Catalog grid ---------- */
+  main{
+    padding:1.8rem 1.4rem 5rem;
+    max-width:520px;
+    margin:0 auto;
+  }
+  .grid{
+    display:flex;
+    flex-direction:column;
+    gap:2.6rem;
+  }
+  .card{
+    background:var(--cream);
+    overflow:visible;
+    position:relative;
+    clip-path:polygon(0 0, 100% 0, 100% 100%, 5% 100%, 0 92%);
+    border:1px solid rgba(43,19,32,0.12);
+  }
+  .card .frame{
+    width:100%;
+    aspect-ratio:4/5;
+    overflow:hidden;
+    background:var(--blush);
+    clip-path:polygon(0 0, 100% 0, 100% 100%, 8% 100%, 0 88%);
+  }
+  .card .frame img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .card .cat-tag{
+    position:absolute;
+    top:0.8rem;
+    left:0;
+    background:var(--gold);
+    color:var(--ink);
+    font-size:0.7rem;
+    font-weight:600;
+    letter-spacing:0.03em;
+    padding:0.28rem 0.7rem 0.28rem 0.5rem;
+    clip-path:polygon(0 0, 100% 0, 88% 100%, 0 100%);
+  }
+  .card .info{
+    padding:1.05rem 1.1rem 0 1.1rem;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:0.8rem;
+  }
+  .card .info h2{
+    font-size:1.18rem;
+    font-weight:500;
+    margin:0;
+    line-height:1.3;
+    position:relative;
+    padding-left:0.7rem;
+  }
+  .card .info h2::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0.15em;
+    bottom:0.15em;
+    width:3px;
+    background:var(--gold);
+    transform:skewX(-12deg);
+  }
+  .card .price{
+    font-family:'Fraunces', serif;
+    font-size:1.02rem;
+    color:var(--cream);
+    background:var(--rosewood);
+    white-space:nowrap;
+    padding:0.2rem 0.6rem 0.2rem 0.4rem;
+    clip-path:polygon(15% 0, 100% 0, 100% 100%, 0 100%);
+  }
+  .card .order-row{
+    margin-top:1rem;
+    padding:0 1.1rem 1.1rem;
+  }
+  .wa-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:0.5rem;
+    background:var(--ink);
+    color:var(--cream);
+    text-decoration:none;
+    font-size:0.88rem;
+    font-weight:500;
+    padding:0.7rem 1.1rem 0.7rem 1.4rem;
+    width:100%;
+    justify-content:center;
+    transition:background 0.12s ease, transform 0.12s ease;
+    clip-path:polygon(4% 0, 100% 0, 96% 100%, 0 100%);
+  }
+  .wa-btn:active{ background:var(--rosewood); transform:translateY(1px); }
+  .wa-btn svg{width:16px;height:16px;flex-shrink:0;}
+
+  .empty, .loading{
+    text-align:center;
+    padding:3rem 1rem;
+    color:rgba(43,19,32,0.55);
+    font-size:0.9rem;
+  }
+
+  /* ---------- Admin toggle tab ---------- */
+  .admin-tab{
+    position:fixed;
+    bottom:0; left:0; right:0;
+    text-align:center;
+    padding:0.7rem;
+    background:rgba(239,230,220,0.92);
+    backdrop-filter:blur(4px);
+    border-top:1px solid rgba(43,19,32,0.12);
+  }
+  .admin-tab button{
+    background:none;
+    border:none;
+    border-top:2px solid var(--gold);
+    font-family:'Work Sans', sans-serif;
+    font-size:0.8rem;
+    color:rgba(43,19,32,0.55);
+    cursor:pointer;
+    padding:0.4rem 1.2rem 0.2rem;
+  }
+
+  /* ---------- Admin panel ---------- */
+  .admin-panel{
+    position:fixed; inset:0;
+    background:var(--ink);
+    color:var(--cream);
+    z-index:20;
+    transform:translateY(100%);
+    transition:transform 0.28s ease;
+    overflow-y:auto;
+  }
+  .admin-panel.open{ transform:translateY(0); }
+  .admin-inner{
+    max-width:480px;
+    margin:0 auto;
+    padding:2rem 1.4rem 4rem;
+  }
+  .admin-inner h2{ font-size:1.5rem; font-weight:500; margin:0 0 0.3rem; }
+  .admin-inner .sub{
+    font-size:0.85rem;
+    color:rgba(251,247,242,0.6);
+    margin:0 0 1.4rem;
+  }
+  .close-admin{
+    background:none;
+    border:1px solid rgba(251,247,242,0.35);
+    color:var(--cream);
+    font-size:0.8rem;
+    padding:0.4rem 0.9rem;
+    float:right;
+    cursor:pointer;
+    clip-path:polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+  }
+  label{
+    display:block;
+    font-size:0.8rem;
+    color:rgba(251,247,242,0.75);
+    margin:1.1rem 0 0.35rem;
+  }
+  input[type=text], input[type=number], input[type=url], select{
+    width:100%;
+    background:rgba(251,247,242,0.08);
+    border:1px solid rgba(251,247,242,0.25);
+    color:var(--cream);
+    padding:0.65rem 0.7rem;
+    font-family:'Work Sans', sans-serif;
+    font-size:0.95rem;
+  }
+  select option{ color:var(--ink); }
+  input[type=file]{
+    width:100%;
+    color:rgba(251,247,242,0.8);
+    font-size:0.85rem;
+    margin-top:0.3rem;
+  }
+  input::placeholder{ color:rgba(251,247,242,0.35); }
+  .price-row{
+    display:flex;
+    gap:0.6rem;
+  }
+  .price-row > div{ flex:1; }
+  .computed{
+    margin-top:1.1rem;
+    background:rgba(201,161,90,0.12);
+    border:1px solid rgba(201,161,90,0.4);
+    padding:0.7rem 0.9rem;
+    font-size:0.88rem;
+  }
+  .computed strong{ color:var(--gold); font-family:'Fraunces', serif; font-size:1.05rem; }
+  .add-btn{
+    margin-top:1.6rem;
+    width:100%;
+    background:var(--gold);
+    color:var(--ink);
+    border:none;
+    padding:0.8rem;
+    font-size:0.95rem;
+    font-weight:600;
+    cursor:pointer;
+    clip-path:polygon(3% 0, 100% 0, 97% 100%, 0 100%);
+  }
+  .add-btn:disabled{ opacity:0.5; cursor:not-allowed; }
+  .admin-list{
+    margin-top:2.4rem;
+    border-top:1px solid rgba(251,247,242,0.18);
+    padding-top:1.2rem;
+  }
+  .admin-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:0.6rem;
+    padding:0.6rem 0;
+    border-bottom:1px solid rgba(251,247,242,0.1);
+    font-size:0.88rem;
+  }
+  .admin-row span{ color:rgba(251,247,242,0.55); }
+  .del-btn{
+    background:none;
+    border:none;
+    color:var(--rosewood);
+    font-size:0.8rem;
+    cursor:pointer;
+  }
+  .lock-screen{ max-width:340px; margin:4rem auto 0; text-align:center; }
+  .lock-screen input{ text-align:center; letter-spacing:0.2em; }
+  .hint{ font-size:0.75rem; color:rgba(251,247,242,0.4); margin-top:0.8rem; }
+  .status-msg{
+    font-size:0.82rem;
+    margin-top:0.8rem;
+    color:var(--gold);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow serif">Vastrika</p>
+  <h1>New arrivals, ready<br>to wear.</h1>
+  <p>Tap a piece you love and send us a message — we'll confirm size and delivery on WhatsApp.</p>
+</header>
+
+<div class="tabs" id="tabs">
+  <button class="tab active" data-cat="All">All</button>
+  <button class="tab" data-cat="Kurthi">Kurthi</button>
+  <button class="tab" data-cat="Half Kurthi">Half Kurthi</button>
+  <button class="tab" data-cat="Relaxed Jeans">Relaxed Jeans</button>
+</div>
+
+<main>
+  <div class="loading" id="loadingMsg">Loading catalog…</div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="emptyMsg" style="display:none;">No pieces in this category yet.</div>
+</main>
+
+<div class="admin-tab">
+  <button onclick="openAdmin()">Shop owner? Manage catalog</button>
+</div>
+
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-inner">
+    <button class="close-admin" onclick="closeAdmin()">Close</button>
+
+    <div id="lockScreen" class="lock-screen">
+      <h2 class="serif">Owner access</h2>
+      <p class="sub">Enter your passcode to manage the catalog.</p>
+      <input type="text" id="passcodeInput" placeholder="Passcode" inputmode="numeric">
+      <button class="add-btn" onclick="tryUnlock()" style="margin-top:1rem;">Unlock</button>
+      <p class="hint">Change PASSCODE in the code before you publish.</p>
+    </div>
+
+    <div id="managePanel" style="display:none;">
+      <h2 class="serif">Add a new piece</h2>
+      <p class="sub">Saved to the shared catalog — visible to everyone on the site.</p>
+
+      <label for="nameInput">Name</label>
+      <input type="text" id="nameInput" placeholder="e.g. Emerald Wrap Kurthi">
+
+      <label for="categoryInput">Category</label>
+      <select id="categoryInput">
+        <option value="Kurthi">Kurthi</option>
+        <option value="Half Kurthi">Half Kurthi</option>
+        <option value="Relaxed Jeans">Relaxed Jeans</option>
+      </select>
+
+      <label>Pricing</label>
+      <div class="price-row">
+        <div>
+          <input type="number" id="basePriceInput" placeholder="Base price ₹">
+        </div>
+        <div>
+          <input type="number" id="profitInput" placeholder="Profit %">
+        </div>
+        <div>
+          <input type="number" id="discountInput" placeholder="Discount %">
+        </div>
+      </div>
+      <div class="computed">Sales price: <strong id="computedPrice">₹0</strong></div>
+
+      <label for="imageFileInput">Photo</label>
+      <input type="file" id="imageFileInput" accept="image/*">
+
+      <button class="add-btn" id="addBtn" onclick="addDress()">Add to catalog</button>
+      <p class="status-msg" id="statusMsg"></p>
+
+      <div class="admin-list" id="adminList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const WHATSAPP_NUMBER = "918848384235";
+  const PASSCODE = "1234";
+
+  const SUPABASE_URL = "https://ygywyxzhofohydaistgf.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_7H5_HvzK4CBul50YVK7KHA_G-vMg56s";
+  const BUCKET = "dress-images";
+
+  const { createClient } = supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  let allDresses = [];
+  let activeCategory = "All";
+
+  function waLink(name){
+    const text = encodeURIComponent(`Hi! I'm interested in the "${name}" — is it available?`);
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
+  }
+
+  async function fetchDresses(){
+    const loadingMsg = document.getElementById('loadingMsg');
+    loadingMsg.style.display = "block";
+    const { data, error } = await db
+      .from('dresses')
+      .select('id,name,category,sales_price,image_url,time')
+      .order('time', { ascending: false });
+    loadingMsg.style.display = "none";
+
+    if (error){
+      console.error(error);
+      loadingMsg.style.display = "block";
+      loadingMsg.textContent = "Couldn't load the catalog. Please refresh.";
+      return;
+    }
+    allDresses = data || [];
+    render();
+  }
+
+  function render(){
+    const grid = document.getElementById('grid');
+    const emptyMsg = document.getElementById('emptyMsg');
+    grid.innerHTML = "";
+
+    const filtered = activeCategory === "All"
+      ? allDresses
+      : allDresses.filter(d => d.category === activeCategory);
+
+    if (filtered.length === 0){
+      emptyMsg.style.display = "block";
+    } else {
+      emptyMsg.style.display = "none";
+      filtered.forEach(d => {
+        const img = d.image_url || "https://picsum.photos/seed/" + encodeURIComponent(d.id) + "/600/750";
+        const card = document.createElement('div');
+        card.className = "card";
+        card.innerHTML = `
+          <div class="frame">
+            <span class="cat-tag">${d.category}</span>
+            <img src="${img}" alt="${d.name}" loading="lazy">
+          </div>
+          <div class="info">
+            <h2>${d.name}</h2>
+            <span class="price">₹${d.sales_price}</span>
+          </div>
+          <div class="order-row">
+            <a class="wa-btn" href="${waLink(d.name)}" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.29-1.39a9.9 9.9 0 0 0 4.75 1.21h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm0 18.02h-.01a8.1 8.1 0 0 1-4.14-1.13l-.3-.18-3.14.82.84-3.06-.19-.32a8.1 8.1 0 0 1-1.24-4.24c0-4.48 3.65-8.13 8.14-8.13 2.17 0 4.21.85 5.75 2.39a8.07 8.07 0 0 1 2.38 5.75c0 4.48-3.65 8.1-8.09 8.1zm4.45-6.08c-.24-.12-1.44-.71-1.67-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.53.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.44-1.34-1.68-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.42-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.13 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28z"/></svg>
+              Order on WhatsApp
+            </a>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    renderAdminList();
+  }
+
+  function renderAdminList(){
+    const list = document.getElementById('adminList');
+    if (!list) return;
+    list.innerHTML = "<p class='sub' style='margin-bottom:0.6rem;'>Current catalog</p>";
+    allDresses.forEach(d => {
+      const row = document.createElement('div');
+      row.className = "admin-row";
+      row.innerHTML = `<span>${d.name} — ${d.category} — ₹${d.sales_price}</span>`;
+      const del = document.createElement('button');
+      del.className = "del-btn";
+      del.textContent = "Remove";
+      del.onclick = () => removeDress(d.id);
+      row.appendChild(del);
+      list.appendChild(row);
+    });
+  }
+
+  function computeSalesPrice(){
+    const base = parseFloat(document.getElementById('basePriceInput').value) || 0;
+    const profit = parseFloat(document.getElementById('profitInput').value) || 0;
+    const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+    const withProfit = base + (base * profit / 100);
+    const final = withProfit - (withProfit * discount / 100);
+    document.getElementById('computedPrice').textContent = "₹" + Math.round(final);
+    return Math.round(final);
+  }
+  ['basePriceInput','profitInput','discountInput'].forEach(id => {
+    document.getElementById(id).addEventListener('input', computeSalesPrice);
+  });
+
+  async function addDress(){
+    const name = document.getElementById('nameInput').value.trim();
+    const category = document.getElementById('categoryInput').value;
+    const basePrice = parseFloat(document.getElementById('basePriceInput').value) || 0;
+    const profit = parseFloat(document.getElementById('profitInput').value) || 0;
+    const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+    const salesPrice = computeSalesPrice();
+    const fileInput = document.getElementById('imageFileInput');
+    const file = fileInput.files[0];
+    const statusMsg = document.getElementById('statusMsg');
+    const addBtn = document.getElementById('addBtn');
+
+    if (!name || !basePrice){
+      alert("Please enter at least a name and base price.");
+      return;
+    }
+
+    addBtn.disabled = true;
+    statusMsg.textContent = "Saving…";
+
+    let imageUrl = "";
+    if (file){
+      statusMsg.textContent = "Uploading photo…";
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+      const { error: uploadError } = await db.storage.from(BUCKET).upload(filePath, file);
+      if (uploadError){
+        console.error(uploadError);
+        statusMsg.textContent = "Photo upload failed: " + uploadError.message;
+        addBtn.disabled = false;
+        return;
+      }
+      const { data: publicUrlData } = db.storage.from(BUCKET).getPublicUrl(filePath);
+      imageUrl = publicUrlData.publicUrl;
+    }
+
+    statusMsg.textContent = "Saving to catalog…";
+    const { error: insertError } = await db.from('dresses').insert({
+      name,
+      category,
+      base_price: basePrice,
+      "%profit": profit,
+      "%discount": discount,
+      sales_price: salesPrice,
+      image_url: imageUrl
+    });
+
+    addBtn.disabled = false;
+
+    if (insertError){
+      console.error(insertError);
+      statusMsg.textContent = "Couldn't save: " + insertError.message;
+      return;
+    }
+
+    statusMsg.textContent = "Added!";
+    document.getElementById('nameInput').value = "";
+    document.getElementById('basePriceInput').value = "";
+    document.getElementById('profitInput').value = "";
+    document.getElementById('discountInput').value = "";
+    document.getElementById('computedPrice').textContent = "₹0";
+    fileInput.value = "";
+
+    await fetchDresses();
+    setTimeout(() => statusMsg.textContent = "", 2500);
+  }
+
+  async function removeDress(id){
+    if (!confirm("Remove this piece from the catalog?")) return;
+    const { error } = await db.from('dresses').delete().eq('id', id);
+    if (error){
+      alert("Couldn't remove: " + error.message);
+      return;
+    }
+    await fetchDresses();
+  }
+
+  function openAdmin(){ document.getElementById('adminPanel').classList.add('open'); }
+  function closeAdmin(){ document.getElementById('adminPanel').classList.remove('open'); }
+  function tryUnlock(){
+    const val = document.getElementById('passcodeInput').value;
+    if (val === PASSCODE){
+      document.getElementById('lockScreen').style.display = "none";
+      document.getElementById('managePanel').style.display = "block";
+    } else {
+      alert("Incorrect passcode.");
+    }
+  }
+
+  document.getElementById('tabs').addEventListener('click', (e) => {
+    const btn = e.target.closest('.tab');
+    if (!btn) return;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    activeCategory = btn.dataset.cat;
+    render();
+  });
+
+  fetchDresses();
+</script>
+
+</body>
+</html>
