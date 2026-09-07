@@ -68,6 +68,52 @@
     max-width:34ch;
   }
 
+  /* ---------- Brand highlight + entrance animation ---------- */
+  .brand{
+    position:relative;
+    display:inline-block;
+    color:var(--gold);
+    font-style:italic;
+    background:linear-gradient(100deg, var(--gold) 0%, #e6cf9a 45%, var(--gold) 60%, var(--gold) 100%);
+    background-size:220% 100%;
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:shimmer 3.5s ease-in-out 1.1s infinite;
+  }
+  .brand-underline{
+    position:absolute;
+    left:0;
+    bottom:-0.08em;
+    height:3px;
+    width:100%;
+    background:var(--rosewood);
+    transform:scaleX(0);
+    transform-origin:left;
+    animation:draw-underline 0.7s cubic-bezier(0.65,0,0.35,1) 0.9s forwards;
+  }
+  .reveal{
+    opacity:0;
+    transform:translateY(14px);
+    animation:rise-in 0.7s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  .reveal-2{ animation-delay:0.18s; }
+
+  @keyframes rise-in{
+    to{ opacity:1; transform:translateY(0); }
+  }
+  @keyframes draw-underline{
+    to{ transform:scaleX(1); }
+  }
+  @keyframes shimmer{
+    0%{ background-position:200% 0; }
+    60%, 100%{ background-position:-40% 0; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .reveal, .brand-underline, .brand{ animation:none; opacity:1; transform:none; }
+    .brand-underline{ transform:scaleX(1); }
+  }
+
   /* ---------- Category tabs ---------- */
   .tabs{
     display:flex;
@@ -341,9 +387,9 @@
 <body>
 
 <header>
-  <p class="eyebrow serif">Vastrika</p>
-  <h1>New arrivals, ready<br>to wear.</h1>
-  <p>Tap a piece you love and send us a message — we'll confirm size and delivery on WhatsApp.</p>
+  <p class="eyebrow serif">Boutique catalog</p>
+  <h1 class="reveal">Welcome to <span class="brand">Vastrika<span class="brand-underline"></span></span></h1>
+  <p class="reveal reveal-2">Tap a piece you love and send us a message — we'll confirm size and delivery on WhatsApp.</p>
 </header>
 
 <div class="tabs" id="tabs">
